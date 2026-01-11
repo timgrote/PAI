@@ -281,7 +281,11 @@ function getVolumeSetting(): number {
   return 1.0; // Default to full volume
 }
 
-// Play audio using afplay (macOS)
+// Detect platform
+const IS_LINUX = process.platform === 'linux';
+const IS_MACOS = process.platform === 'darwin';
+
+// Play audio using platform-appropriate player
 async function playAudio(audioBuffer: ArrayBuffer): Promise<void> {
   const tempFile = `/tmp/voice-${Date.now()}.mp3`;
 
@@ -291,8 +295,17 @@ async function playAudio(audioBuffer: ArrayBuffer): Promise<void> {
   const volume = getVolumeSetting();
 
   return new Promise((resolve, reject) => {
-    // afplay -v takes a value from 0.0 to 1.0
-    const proc = spawn('/usr/bin/afplay', ['-v', volume.toString(), tempFile]);
+    let proc;
+
+    if (IS_LINUX) {
+      // Use ffplay on Linux (quiet mode, no video window)
+      // Volume: ffplay uses 0-100 scale
+      const ffVolume = Math.round(volume * 100);
+      proc = spawn('/usr/bin/ffplay', ['-nodisp', '-autoexit', '-loglevel', 'quiet', '-volume', ffVolume.toString(), tempFile]);
+    } else {
+      // macOS: afplay -v takes a value from 0.0 to 1.0
+      proc = spawn('/usr/bin/afplay', ['-v', volume.toString(), tempFile]);
+    }
 
     proc.on('error', (error) => {
       console.error('Error playing audio:', error);
@@ -306,7 +319,7 @@ async function playAudio(audioBuffer: ArrayBuffer): Promise<void> {
       if (code === 0) {
         resolve();
       } else {
-        reject(new Error(`afplay exited with code ${code}`));
+        reject(new Error(`Audio player exited with code ${code}`));
       }
     });
   });
@@ -392,12 +405,18 @@ async function sendNotification(
     }
   }
 
-  // Display macOS notification - escape for AppleScript
+  // Display desktop notification
   try {
-    const escapedTitle = escapeForAppleScript(safeTitle);
-    const escapedMessage = escapeForAppleScript(safeMessage);
-    const script = `display notification "${escapedMessage}" with title "${escapedTitle}" sound name ""`;
-    await spawnSafe('/usr/bin/osascript', ['-e', script]);
+    if (IS_LINUX) {
+      // Linux: use notify-send
+      await spawnSafe('/usr/bin/notify-send', [safeTitle, safeMessage]);
+    } else {
+      // macOS: use osascript
+      const escapedTitle = escapeForAppleScript(safeTitle);
+      const escapedMessage = escapeForAppleScript(safeMessage);
+      const script = `display notification "${escapedMessage}" with title "${escapedTitle}" sound name ""`;
+      await spawnSafe('/usr/bin/osascript', ['-e', script]);
+    }
   } catch (error) {
     console.error("Notification display error:", error);
   }

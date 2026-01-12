@@ -1,13 +1,14 @@
 #!/usr/bin/env bun
 /**
- * Kai Bundle Installation Wizard v1.3.0
+ * Kai Bundle Installation Wizard v1.4.0
  *
  * Simplified interactive CLI wizard for setting up the Kai bundle.
  * Auto-detects AI system directories and creates safety backups.
+ * Automatically syncs all pack files from ~/PAI/Packs/ to ~/.claude/
  *
  * Usage:
  *   bun run install.ts           # Fresh install with backup
- *   bun run install.ts --update  # Update existing installation (no backup, preserves config)
+ *   bun run install.ts --update  # Update existing installation (syncs all packs)
  */
 
 import { $ } from "bun";
@@ -542,11 +543,143 @@ Generated: ${new Date().toISOString().split("T")[0]}
 }
 
 // =============================================================================
+// PACK SYNC
+// =============================================================================
+
+interface PackSyncResult {
+  name: string;
+  filesCount: number;
+  success: boolean;
+  error?: string;
+}
+
+async function findPaiRepoDir(): Promise<string | null> {
+  // Check common locations for the PAI repo
+  const possiblePaths = [
+    `${process.env.HOME}/PAI`,
+    `${process.env.HOME}/repos/PAI`,
+    `${process.env.HOME}/Projects/PAI`,
+    `${process.env.HOME}/Code/PAI`,
+    process.env.PAI_REPO_DIR, // Allow explicit override
+  ].filter(Boolean) as string[];
+
+  for (const path of possiblePaths) {
+    if (existsSync(`${path}/Packs`) && existsSync(`${path}/PACKS.md`)) {
+      return path;
+    }
+  }
+  return null;
+}
+
+async function syncPackFiles(claudeDir: string): Promise<PackSyncResult[]> {
+  const results: PackSyncResult[] = [];
+
+  const paiRepoDir = await findPaiRepoDir();
+  if (!paiRepoDir) {
+    console.log("  ⚠️  PAI repo not found. Skipping pack sync.");
+    console.log("     Set PAI_REPO_DIR or clone PAI to ~/PAI");
+    return results;
+  }
+
+  console.log(`  Found PAI repo at: ${paiRepoDir}`);
+  const packsDir = `${paiRepoDir}/Packs`;
+
+  // Get list of pack directories
+  const packDirs = await $`ls -d ${packsDir}/pai-*/ 2>/dev/null`.text().catch(() => "");
+  const packs = packDirs.trim().split("\n").filter(Boolean);
+
+  for (const packPath of packs) {
+    const packName = packPath.split("/").filter(Boolean).pop() || "";
+    const srcDir = `${packPath}src`;
+
+    if (!existsSync(srcDir)) {
+      continue; // Skip packs without src directory
+    }
+
+    try {
+      let filesCount = 0;
+
+      // Sync hooks (*.ts files in src/ root go to hooks/)
+      const hookFiles = await $`find ${srcDir} -maxdepth 1 -name "*.ts" -type f 2>/dev/null`.text().catch(() => "");
+      for (const file of hookFiles.trim().split("\n").filter(Boolean)) {
+        await $`cp ${file} ${claudeDir}/hooks/`.quiet();
+        filesCount++;
+      }
+
+      // Sync hooks/lib/ directory
+      if (existsSync(`${srcDir}/hooks/lib`)) {
+        await $`mkdir -p ${claudeDir}/hooks/lib`.quiet();
+        await $`cp -r ${srcDir}/hooks/lib/* ${claudeDir}/hooks/lib/ 2>/dev/null`.quiet().catch(() => {});
+        const libFiles = await $`find ${srcDir}/hooks/lib -type f 2>/dev/null`.text().catch(() => "");
+        filesCount += libFiles.trim().split("\n").filter(Boolean).length;
+      }
+
+      // Sync hooks/*.ts files
+      if (existsSync(`${srcDir}/hooks`)) {
+        const hooksTs = await $`find ${srcDir}/hooks -maxdepth 1 -name "*.ts" -type f 2>/dev/null`.text().catch(() => "");
+        for (const file of hooksTs.trim().split("\n").filter(Boolean)) {
+          await $`cp ${file} ${claudeDir}/hooks/`.quiet();
+          filesCount++;
+        }
+      }
+
+      // Sync skills/ directory
+      if (existsSync(`${srcDir}/skills`)) {
+        await $`cp -r ${srcDir}/skills/* ${claudeDir}/skills/ 2>/dev/null`.quiet().catch(() => {});
+        const skillFiles = await $`find ${srcDir}/skills -type f 2>/dev/null`.text().catch(() => "");
+        filesCount += skillFiles.trim().split("\n").filter(Boolean).length;
+      }
+
+      // Sync voice/ directory
+      if (existsSync(`${srcDir}/voice`)) {
+        await $`mkdir -p ${claudeDir}/voice`.quiet();
+        await $`cp -r ${srcDir}/voice/* ${claudeDir}/voice/ 2>/dev/null`.quiet().catch(() => {});
+        const voiceFiles = await $`find ${srcDir}/voice -type f 2>/dev/null`.text().catch(() => "");
+        filesCount += voiceFiles.trim().split("\n").filter(Boolean).length;
+      }
+
+      // Sync observability/ directory
+      if (existsSync(`${srcDir}/observability`)) {
+        await $`mkdir -p ${claudeDir}/observability`.quiet();
+        await $`cp -r ${srcDir}/observability/* ${claudeDir}/observability/ 2>/dev/null`.quiet().catch(() => {});
+        const obsFiles = await $`find ${srcDir}/observability -type f 2>/dev/null`.text().catch(() => "");
+        filesCount += obsFiles.trim().split("\n").filter(Boolean).length;
+      }
+
+      // Sync tools/ directory
+      if (existsSync(`${srcDir}/tools`)) {
+        await $`mkdir -p ${claudeDir}/tools`.quiet();
+        await $`cp -r ${srcDir}/tools/* ${claudeDir}/tools/ 2>/dev/null`.quiet().catch(() => {});
+        const toolFiles = await $`find ${srcDir}/tools -type f 2>/dev/null`.text().catch(() => "");
+        filesCount += toolFiles.trim().split("\n").filter(Boolean).length;
+      }
+
+      // Sync config/*.json to voice/ (for voice-personalities.json etc)
+      if (existsSync(`${packPath}config`)) {
+        const configFiles = await $`find ${packPath}config -name "*.json" -type f 2>/dev/null`.text().catch(() => "");
+        for (const file of configFiles.trim().split("\n").filter(Boolean)) {
+          await $`cp ${file} ${claudeDir}/voice/`.quiet().catch(() => {});
+          filesCount++;
+        }
+      }
+
+      if (filesCount > 0) {
+        results.push({ name: packName, filesCount, success: true });
+      }
+    } catch (error: any) {
+      results.push({ name: packName, filesCount: 0, success: false, error: error.message });
+    }
+  }
+
+  return results;
+}
+
+// =============================================================================
 // MAIN
 // =============================================================================
 
 async function main() {
-  const modeLabel = isUpdateMode ? "UPDATE MODE" : "v1.3.0";
+  const modeLabel = isUpdateMode ? "UPDATE MODE" : "v1.4.0";
   console.log(`
 ╔═══════════════════════════════════════════════════════════════════╗
 ║                                                                   ║
@@ -588,6 +721,22 @@ async function main() {
     await $`mkdir -p ${claudeDir}/hooks/lib`;
     await $`mkdir -p ${claudeDir}/tools`;
     await $`mkdir -p ${claudeDir}/voice`;
+    await $`mkdir -p ${claudeDir}/observability`;
+
+    // Sync pack files from PAI repo
+    console.log("\nSyncing pack files from PAI repo...");
+    const syncResults = await syncPackFiles(claudeDir);
+    if (syncResults.length > 0) {
+      console.log(`  ✓ Synced ${syncResults.length} packs:`);
+      for (const result of syncResults) {
+        if (result.success) {
+          console.log(`    • ${result.name}: ${result.filesCount} files`);
+        } else {
+          console.log(`    • ${result.name}: ❌ ${result.error}`);
+        }
+      }
+    }
+    console.log();
 
     // Generate files
     console.log("Generating SKILL.md...");
@@ -696,6 +845,8 @@ ${config.elevenLabsVoiceId ? `export ELEVENLABS_VOICE_ID="${config.elevenLabsVoi
     printHeader(isUpdateMode ? "UPDATE COMPLETE" : "INSTALLATION COMPLETE");
 
     if (isUpdateMode) {
+      const syncedPacksList = syncResults.filter(r => r.success).map(r => r.name).join(", ") || "none";
+      const totalFiles = syncResults.reduce((sum, r) => sum + r.filesCount, 0);
       console.log(`
 Your Kai system has been updated:
 
@@ -704,6 +855,7 @@ Your Kai system has been updated:
   👤 User: ${config.userName}
   🌍 Timezone: ${config.timeZone}
   🔊 Voice: ${config.elevenLabsApiKey ? "Enabled" : "Disabled"}
+  📦 Packs synced: ${syncResults.filter(r => r.success).length} (${totalFiles} files)
 
 Files updated:
   - ~/.claude/skills/CORE/SKILL.md
@@ -711,15 +863,20 @@ Files updated:
   - ~/.claude/skills/CORE/CoreStack.md
   - ~/.claude/.env
   - ~/.claude/settings.json
+  - All pack files from ~/PAI/Packs/*/src/
+
+Packs synced: ${syncedPacksList}
 
 Next steps:
 
-  1. Re-install any packs that have been updated (check changelog)
-  2. Restart Claude Code to activate changes
+  1. Restart Claude Code to activate changes
+  2. Restart voice server if updated: ~/.claude/voice/manage.sh restart
 
 Your existing hooks, history, and customizations have been preserved.
 `);
     } else {
+      const syncedPacksList = syncResults.filter(r => r.success).map(r => r.name).join(", ") || "none";
+      const totalFiles = syncResults.reduce((sum, r) => sum + r.filesCount, 0);
       console.log(`
 Your Kai system is configured:
 
@@ -729,6 +886,7 @@ Your Kai system is configured:
   👤 User: ${config.userName}
   🌍 Timezone: ${config.timeZone}
   🔊 Voice: ${config.elevenLabsApiKey ? "Enabled" : "Disabled"}
+  📦 Packs installed: ${syncResults.filter(r => r.success).length} (${totalFiles} files)
 
 Files created:
   - ~/.claude/skills/CORE/SKILL.md
@@ -736,16 +894,14 @@ Files created:
   - ~/.claude/skills/CORE/CoreStack.md
   - ~/.claude/.env
   - ~/.claude/settings.json (env vars for Claude Code)
+  - All pack files from ~/PAI/Packs/*/src/
+
+Packs installed: ${syncedPacksList}
 
 Next steps:
 
-  1. Install the packs IN ORDER by giving each pack file to your AI:
-     - kai-hook-system.md
-     - kai-history-system.md
-     - kai-core-install.md
-     - kai-voice-system.md (optional, requires ElevenLabs)
-
-  2. Restart Claude Code to activate hooks
+  1. Restart Claude Code to activate hooks
+  2. Start voice server: ~/.claude/voice/manage.sh start
 
 Your backup is at ~/.claude-BACKUP if you need to restore.
 `);

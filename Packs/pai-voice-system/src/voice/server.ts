@@ -294,35 +294,53 @@ async function playAudio(audioBuffer: ArrayBuffer): Promise<void> {
 
   const volume = getVolumeSetting();
 
-  return new Promise((resolve, reject) => {
-    let proc;
+  if (IS_LINUX) {
+    // Use Windows ffplay.exe directly via Bun.spawn (non-snap bun has full access)
+    const winPath = `\\\\wsl.localhost\\Ubuntu${tempFile.replace(/\//g, '\\')}`;
+    const ffplayExe = '/mnt/c/Users/tim/AppData/Local/Microsoft/WinGet/Packages/Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe/ffmpeg-8.0-full_build/bin/ffplay.exe';
+    console.log(`🔊 Playing audio via Windows ffplay: ${winPath}`);
 
-    if (IS_LINUX) {
-      // Use ffplay on Linux (quiet mode, no video window)
-      // Volume: ffplay uses 0-100 scale
-      const ffVolume = Math.round(volume * 100);
-      proc = spawn('/usr/bin/ffplay', ['-nodisp', '-autoexit', '-loglevel', 'quiet', '-volume', ffVolume.toString(), tempFile]);
-    } else {
-      // macOS: afplay -v takes a value from 0.0 to 1.0
-      proc = spawn('/usr/bin/afplay', ['-v', volume.toString(), tempFile]);
-    }
+    try {
+      const proc = Bun.spawn([ffplayExe, '-nodisp', '-autoexit', winPath], {
+        stdout: 'pipe',
+        stderr: 'pipe',
+      });
 
-    proc.on('error', (error) => {
-      console.error('Error playing audio:', error);
-      reject(error);
-    });
+      const exitCode = await proc.exited;
+      console.log(`🔊 ffplay completed with exit code ${exitCode}`);
 
-    proc.on('exit', (code) => {
       // Clean up temp file
-      spawn('/bin/rm', [tempFile]);
+      setTimeout(() => {
+        try { Bun.spawn(['/bin/rm', tempFile]); } catch (e) {}
+      }, 500);
 
-      if (code === 0) {
-        resolve();
-      } else {
-        reject(new Error(`Audio player exited with code ${code}`));
+      if (exitCode !== 0) {
+        throw new Error(`ffplay exited with code ${exitCode}`);
       }
+    } catch (error) {
+      console.error('Error playing audio:', error);
+      throw error;
+    }
+  } else {
+    // macOS: use afplay via traditional spawn
+    return new Promise((resolve, reject) => {
+      const proc = spawn('/usr/bin/afplay', ['-v', volume.toString(), tempFile]);
+
+      proc.on('error', (error) => {
+        console.error('Error playing audio:', error);
+        reject(error);
+      });
+
+      proc.on('exit', (code) => {
+        spawn('/bin/rm', [tempFile]);
+        if (code === 0) {
+          resolve();
+        } else {
+          reject(new Error(`Audio player exited with code ${code}`));
+        }
+      });
     });
-  });
+  }
 }
 
 // Spawn a process safely
@@ -405,12 +423,11 @@ async function sendNotification(
     }
   }
 
-  // Display desktop notification
+  // Display desktop notification (skip on Linux/WSL - notify-send not typically installed)
   try {
     if (IS_LINUX) {
-      // Linux: use notify-send
-      await spawnSafe('/usr/bin/notify-send', [safeTitle, safeMessage]);
-    } else {
+      // Skip on WSL - notify-send not available and voice is the main output
+    } else if (IS_MACOS) {
       // macOS: use osascript
       const escapedTitle = escapeForAppleScript(safeTitle);
       const escapedMessage = escapeForAppleScript(safeMessage);

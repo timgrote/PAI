@@ -27,8 +27,18 @@ start() {
 
     echo "🚀 Starting PAI Voice Server on port $PORT..."
 
-    # Start server in background
-    nohup bun run "$SCRIPT_DIR/server.ts" > "$LOG_FILE" 2>&1 &
+    # Load environment variables
+    PAI_DIR="${PAI_DIR:-$HOME/.claude}"
+    if [ -f "$PAI_DIR/.env" ]; then
+        set -a
+        source "$PAI_DIR/.env"
+        set +a
+    fi
+    export PULSE_SERVER="${PULSE_SERVER:-unix:/mnt/wslg/PulseServer}"
+
+    # Start server in background (use non-snap bun to avoid sandbox restrictions)
+    BUN_PATH="$HOME/.bun/bin/bun"
+    nohup "$BUN_PATH" run "$SCRIPT_DIR/server.ts" > "$LOG_FILE" 2>&1 &
     echo $! > "$PID_FILE"
 
     # Wait a moment for server to start

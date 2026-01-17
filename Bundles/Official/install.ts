@@ -1,14 +1,13 @@
 #!/usr/bin/env bun
 /**
- * Kai Bundle Installation Wizard v1.4.0
+ * PAI Bundle Installation Wizard v1.3.0
  *
- * Simplified interactive CLI wizard for setting up the Kai bundle.
+ * Simplified interactive CLI wizard for setting up PAI (Personal AI Infrastructure).
  * Auto-detects AI system directories and creates safety backups.
- * Automatically syncs all pack files from ~/PAI/Packs/ to ~/.claude/
  *
  * Usage:
  *   bun run install.ts           # Fresh install with backup
- *   bun run install.ts --update  # Update existing installation (syncs all packs)
+ *   bun run install.ts --update  # Update existing installation (no backup, preserves config)
  */
 
 import { $ } from "bun";
@@ -223,7 +222,7 @@ async function detectAndBackup(): Promise<boolean> {
 
     // Still ask for confirmation before proceeding
     const proceed = await askYesNo(
-      "Ready to install Kai to ~/.claude. Proceed?",
+      "Ready to install PAI to ~/.claude. Proceed?",
       true
     );
     if (!proceed) {
@@ -241,7 +240,7 @@ async function detectAndBackup(): Promise<boolean> {
   console.log("│  The installer will:                                        │");
   console.log("│                                                             │");
   console.log("│  1. Copy your current ~/.claude → ~/.claude-BACKUP          │");
-  console.log("│  2. Install fresh Kai files into ~/.claude                  │");
+  console.log("│  2. Install fresh PAI files into ~/.claude                  │");
   console.log("│                                                             │");
   console.log("│  Your original files will be preserved in the backup.       │");
   console.log("│                                                             │");
@@ -280,14 +279,14 @@ async function detectAndBackup(): Promise<boolean> {
 // =============================================================================
 
 async function gatherConfig(): Promise<WizardConfig> {
-  printHeader("KAI BUNDLE SETUP");
+  printHeader("PAI BUNDLE SETUP");
 
   // In update mode, read existing config first
   const existing = isUpdateMode ? await readExistingConfig() : {};
 
   if (isUpdateMode) {
     console.log("Update mode: Using existing configuration as defaults.\n");
-    if (existing.daName) console.log(`  Found AI name: ${existing.daName}`);
+    if (existing.daName) console.log(`  Found DA name: ${existing.daName}`);
     if (existing.userName) console.log(`  Found user: ${existing.userName}`);
     if (existing.timeZone) console.log(`  Found timezone: ${existing.timeZone}`);
     if (existing.elevenLabsApiKey) console.log(`  Found ElevenLabs API key: ****${existing.elevenLabsApiKey.slice(-4)}`);
@@ -306,7 +305,7 @@ async function gatherConfig(): Promise<WizardConfig> {
     }
     console.log("\nLet's update your configuration:\n");
   } else {
-    console.log("This wizard will configure your AI assistant.\n");
+    console.log("This wizard will configure your DA.\n");
   }
 
   // Check for existing PAI_DIR environment variable
@@ -333,7 +332,7 @@ async function gatherConfig(): Promise<WizardConfig> {
     : await ask("What is your name? ");
 
   const daName = await askWithDefault(
-    "What would you like to name your AI assistant?",
+    "What would you like to name your DA?",
     existing.daName || "Kai"
   );
 
@@ -392,7 +391,7 @@ description: Personal AI Infrastructure core. AUTO-LOADS at session start. USE W
 
 # CORE - Personal AI Infrastructure
 
-**Auto-loads at session start.** This skill defines your AI's identity, response format, and core operating principles.
+**Auto-loads at session start.** This skill defines your DA's identity, response format, and core operating principles.
 
 ## Identity
 
@@ -408,7 +407,7 @@ description: Personal AI Infrastructure core. AUTO-LOADS at session start. USE W
 
 ## First-Person Voice (CRITICAL)
 
-Your AI should speak as itself, not about itself in third person.
+Your DA should speak as itself, not about itself in third person.
 
 **Correct:**
 - "for my system" / "in my architecture"
@@ -543,152 +542,20 @@ Generated: ${new Date().toISOString().split("T")[0]}
 }
 
 // =============================================================================
-// PACK SYNC
-// =============================================================================
-
-interface PackSyncResult {
-  name: string;
-  filesCount: number;
-  success: boolean;
-  error?: string;
-}
-
-async function findPaiRepoDir(): Promise<string | null> {
-  // Check common locations for the PAI repo
-  const possiblePaths = [
-    `${process.env.HOME}/PAI`,
-    `${process.env.HOME}/repos/PAI`,
-    `${process.env.HOME}/Projects/PAI`,
-    `${process.env.HOME}/Code/PAI`,
-    process.env.PAI_REPO_DIR, // Allow explicit override
-  ].filter(Boolean) as string[];
-
-  for (const path of possiblePaths) {
-    if (existsSync(`${path}/Packs`) && existsSync(`${path}/PACKS.md`)) {
-      return path;
-    }
-  }
-  return null;
-}
-
-async function syncPackFiles(claudeDir: string): Promise<PackSyncResult[]> {
-  const results: PackSyncResult[] = [];
-
-  const paiRepoDir = await findPaiRepoDir();
-  if (!paiRepoDir) {
-    console.log("  ⚠️  PAI repo not found. Skipping pack sync.");
-    console.log("     Set PAI_REPO_DIR or clone PAI to ~/PAI");
-    return results;
-  }
-
-  console.log(`  Found PAI repo at: ${paiRepoDir}`);
-  const packsDir = `${paiRepoDir}/Packs`;
-
-  // Get list of pack directories
-  const packDirs = await $`ls -d ${packsDir}/pai-*/ 2>/dev/null`.text().catch(() => "");
-  const packs = packDirs.trim().split("\n").filter(Boolean);
-
-  for (const packPath of packs) {
-    const packName = packPath.split("/").filter(Boolean).pop() || "";
-    const srcDir = `${packPath}src`;
-
-    if (!existsSync(srcDir)) {
-      continue; // Skip packs without src directory
-    }
-
-    try {
-      let filesCount = 0;
-
-      // Sync hooks (*.ts files in src/ root go to hooks/)
-      const hookFiles = await $`find ${srcDir} -maxdepth 1 -name "*.ts" -type f 2>/dev/null`.text().catch(() => "");
-      for (const file of hookFiles.trim().split("\n").filter(Boolean)) {
-        await $`cp ${file} ${claudeDir}/hooks/`.quiet();
-        filesCount++;
-      }
-
-      // Sync hooks/lib/ directory
-      if (existsSync(`${srcDir}/hooks/lib`)) {
-        await $`mkdir -p ${claudeDir}/hooks/lib`.quiet();
-        await $`cp -r ${srcDir}/hooks/lib/* ${claudeDir}/hooks/lib/ 2>/dev/null`.quiet().catch(() => {});
-        const libFiles = await $`find ${srcDir}/hooks/lib -type f 2>/dev/null`.text().catch(() => "");
-        filesCount += libFiles.trim().split("\n").filter(Boolean).length;
-      }
-
-      // Sync hooks/*.ts files
-      if (existsSync(`${srcDir}/hooks`)) {
-        const hooksTs = await $`find ${srcDir}/hooks -maxdepth 1 -name "*.ts" -type f 2>/dev/null`.text().catch(() => "");
-        for (const file of hooksTs.trim().split("\n").filter(Boolean)) {
-          await $`cp ${file} ${claudeDir}/hooks/`.quiet();
-          filesCount++;
-        }
-      }
-
-      // Sync skills/ directory
-      if (existsSync(`${srcDir}/skills`)) {
-        await $`cp -r ${srcDir}/skills/* ${claudeDir}/skills/ 2>/dev/null`.quiet().catch(() => {});
-        const skillFiles = await $`find ${srcDir}/skills -type f 2>/dev/null`.text().catch(() => "");
-        filesCount += skillFiles.trim().split("\n").filter(Boolean).length;
-      }
-
-      // Sync voice/ directory
-      if (existsSync(`${srcDir}/voice`)) {
-        await $`mkdir -p ${claudeDir}/voice`.quiet();
-        await $`cp -r ${srcDir}/voice/* ${claudeDir}/voice/ 2>/dev/null`.quiet().catch(() => {});
-        const voiceFiles = await $`find ${srcDir}/voice -type f 2>/dev/null`.text().catch(() => "");
-        filesCount += voiceFiles.trim().split("\n").filter(Boolean).length;
-      }
-
-      // Sync observability/ directory
-      if (existsSync(`${srcDir}/observability`)) {
-        await $`mkdir -p ${claudeDir}/observability`.quiet();
-        await $`cp -r ${srcDir}/observability/* ${claudeDir}/observability/ 2>/dev/null`.quiet().catch(() => {});
-        const obsFiles = await $`find ${srcDir}/observability -type f 2>/dev/null`.text().catch(() => "");
-        filesCount += obsFiles.trim().split("\n").filter(Boolean).length;
-      }
-
-      // Sync tools/ directory
-      if (existsSync(`${srcDir}/tools`)) {
-        await $`mkdir -p ${claudeDir}/tools`.quiet();
-        await $`cp -r ${srcDir}/tools/* ${claudeDir}/tools/ 2>/dev/null`.quiet().catch(() => {});
-        const toolFiles = await $`find ${srcDir}/tools -type f 2>/dev/null`.text().catch(() => "");
-        filesCount += toolFiles.trim().split("\n").filter(Boolean).length;
-      }
-
-      // Sync config/*.json to voice/ (for voice-personalities.json etc)
-      if (existsSync(`${packPath}config`)) {
-        const configFiles = await $`find ${packPath}config -name "*.json" -type f 2>/dev/null`.text().catch(() => "");
-        for (const file of configFiles.trim().split("\n").filter(Boolean)) {
-          await $`cp ${file} ${claudeDir}/voice/`.quiet().catch(() => {});
-          filesCount++;
-        }
-      }
-
-      if (filesCount > 0) {
-        results.push({ name: packName, filesCount, success: true });
-      }
-    } catch (error: any) {
-      results.push({ name: packName, filesCount: 0, success: false, error: error.message });
-    }
-  }
-
-  return results;
-}
-
-// =============================================================================
 // MAIN
 // =============================================================================
 
 async function main() {
-  const modeLabel = isUpdateMode ? "UPDATE MODE" : "v1.4.0";
+  const modeLabel = isUpdateMode ? "UPDATE MODE" : "v1.3.0";
   console.log(`
 ╔═══════════════════════════════════════════════════════════════════╗
 ║                                                                   ║
-║   ██╗  ██╗ █████╗ ██╗    ██████╗ ██╗   ██╗███╗   ██╗██████╗ ██╗   ║
-║   ██║ ██╔╝██╔══██╗██║    ██╔══██╗██║   ██║████╗  ██║██╔══██╗██║   ║
-║   █████╔╝ ███████║██║    ██████╔╝██║   ██║██╔██╗ ██║██║  ██║██║   ║
-║   ██╔═██╗ ██╔══██║██║    ██╔══██╗██║   ██║██║╚██╗██║██║  ██║██║   ║
-║   ██║  ██╗██║  ██║██║    ██████╔╝╚██████╔╝██║ ╚████║██████╔╝███████╗
-║   ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝    ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚═════╝ ╚══════╝
+║   ██████╗  █████╗ ██╗    ██████╗ ██╗   ██╗███╗   ██╗██████╗ ██╗   ║
+║   ██╔══██╗██╔══██╗██║    ██╔══██╗██║   ██║████╗  ██║██╔══██╗██║   ║
+║   ██████╔╝███████║██║    ██████╔╝██║   ██║██╔██╗ ██║██║  ██║██║   ║
+║   ██╔═══╝ ██╔══██║██║    ██╔══██╗██║   ██║██║╚██╗██║██║  ██║██║   ║
+║   ██║     ██║  ██║██║    ██████╔╝╚██████╔╝██║ ╚████║██████╔╝███████╗
+║   ╚═╝     ╚═╝  ╚═╝╚═╝    ╚═════╝  ╚═════╝ ╚═╝  ╚═══╝╚═════╝ ╚══════╝
 ║                                                                   ║
 ║              Personal AI Infrastructure - ${modeLabel.padEnd(12)}         ║
 ║                                                                   ║
@@ -721,22 +588,6 @@ async function main() {
     await $`mkdir -p ${claudeDir}/hooks/lib`;
     await $`mkdir -p ${claudeDir}/tools`;
     await $`mkdir -p ${claudeDir}/voice`;
-    await $`mkdir -p ${claudeDir}/observability`;
-
-    // Sync pack files from PAI repo
-    console.log("\nSyncing pack files from PAI repo...");
-    const syncResults = await syncPackFiles(claudeDir);
-    if (syncResults.length > 0) {
-      console.log(`  ✓ Synced ${syncResults.length} packs:`);
-      for (const result of syncResults) {
-        if (result.success) {
-          console.log(`    • ${result.name}: ${result.filesCount} files`);
-        } else {
-          console.log(`    • ${result.name}: ❌ ${result.error}`);
-        }
-      }
-    }
-    console.log();
 
     // Generate files
     console.log("Generating SKILL.md...");
@@ -754,7 +605,7 @@ async function main() {
     // Create .env file (no quotes around values - .env format standard)
     console.log("Creating .env file...");
     const envFileContent = `# PAI Environment Configuration
-# Created by Kai Bundle installer - ${new Date().toISOString().split("T")[0]}
+# Created by PAI Bundle installer - ${new Date().toISOString().split("T")[0]}
 
 DA=${config.daName}
 TIME_ZONE=${config.timeZone}
@@ -811,7 +662,7 @@ ${config.elevenLabsVoiceId ? `ELEVENLABS_VOICE_ID=${config.elevenLabsVoiceId}` :
       : `${process.env.HOME}/.bashrc`;
 
     const envExports = `
-# PAI Configuration (added by Kai Bundle installer)
+# PAI Configuration (added by PAI Bundle installer)
 export DA="${config.daName}"
 export TIME_ZONE="${config.timeZone}"
 export PAI_SOURCE_APP="$DA"
@@ -845,17 +696,14 @@ ${config.elevenLabsVoiceId ? `export ELEVENLABS_VOICE_ID="${config.elevenLabsVoi
     printHeader(isUpdateMode ? "UPDATE COMPLETE" : "INSTALLATION COMPLETE");
 
     if (isUpdateMode) {
-      const syncedPacksList = syncResults.filter(r => r.success).map(r => r.name).join(", ") || "none";
-      const totalFiles = syncResults.reduce((sum, r) => sum + r.filesCount, 0);
       console.log(`
-Your Kai system has been updated:
+Your PAI system has been updated:
 
   📁 Installation: ~/.claude
   🤖 Assistant Name: ${config.daName}
   👤 User: ${config.userName}
   🌍 Timezone: ${config.timeZone}
   🔊 Voice: ${config.elevenLabsApiKey ? "Enabled" : "Disabled"}
-  📦 Packs synced: ${syncResults.filter(r => r.success).length} (${totalFiles} files)
 
 Files updated:
   - ~/.claude/skills/CORE/SKILL.md
@@ -863,22 +711,17 @@ Files updated:
   - ~/.claude/skills/CORE/CoreStack.md
   - ~/.claude/.env
   - ~/.claude/settings.json
-  - All pack files from ~/PAI/Packs/*/src/
-
-Packs synced: ${syncedPacksList}
 
 Next steps:
 
-  1. Restart Claude Code to activate changes
-  2. Restart voice server if updated: ~/.claude/voice/manage.sh restart
+  1. Re-install any packs that have been updated (check changelog)
+  2. Restart Claude Code to activate changes
 
 Your existing hooks, history, and customizations have been preserved.
 `);
     } else {
-      const syncedPacksList = syncResults.filter(r => r.success).map(r => r.name).join(", ") || "none";
-      const totalFiles = syncResults.reduce((sum, r) => sum + r.filesCount, 0);
       console.log(`
-Your Kai system is configured:
+Your PAI system is configured:
 
   📁 Installation: ~/.claude
   💾 Backup: ~/.claude-BACKUP
@@ -886,7 +729,6 @@ Your Kai system is configured:
   👤 User: ${config.userName}
   🌍 Timezone: ${config.timeZone}
   🔊 Voice: ${config.elevenLabsApiKey ? "Enabled" : "Disabled"}
-  📦 Packs installed: ${syncResults.filter(r => r.success).length} (${totalFiles} files)
 
 Files created:
   - ~/.claude/skills/CORE/SKILL.md
@@ -894,14 +736,16 @@ Files created:
   - ~/.claude/skills/CORE/CoreStack.md
   - ~/.claude/.env
   - ~/.claude/settings.json (env vars for Claude Code)
-  - All pack files from ~/PAI/Packs/*/src/
-
-Packs installed: ${syncedPacksList}
 
 Next steps:
 
-  1. Restart Claude Code to activate hooks
-  2. Start voice server: ~/.claude/voice/manage.sh start
+  1. Install the packs IN ORDER by giving each pack file to your DA:
+     - pai-hook-system.md
+     - pai-memory-system.md
+     - pai-core-install.md
+     - pai-voice-system.md (optional, requires ElevenLabs)
+
+  2. Restart Claude Code to activate hooks
 
 Your backup is at ~/.claude-BACKUP if you need to restore.
 `);

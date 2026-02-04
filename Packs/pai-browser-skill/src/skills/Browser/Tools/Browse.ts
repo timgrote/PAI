@@ -184,10 +184,13 @@ async function ensureSession(): Promise<number> {
   const env: Record<string, string> = {
     ...process.env as Record<string, string>,
     BROWSER_PORT: String(port),
-    BROWSER_HEADLESS: 'true'
+    BROWSER_HEADLESS: 'true',
+    PLAYWRIGHT_BROWSERS_PATH: process.env.HOME + '/.cache/ms-playwright'
   }
 
-  const child = spawn('bun', ['run', serverPath], {
+  // Use system bun explicitly (snap bun has sandboxing issues with Playwright)
+  const bunPath = process.env.HOME + '/.bun/bin/bun'
+  const child = spawn(bunPath, ['run', serverPath], {
     detached: true,
     stdio: 'ignore',
     env

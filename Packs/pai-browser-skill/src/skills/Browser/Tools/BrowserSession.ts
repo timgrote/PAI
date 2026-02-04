@@ -1,4 +1,7 @@
 #!/usr/bin/env bun
+// Set Playwright browsers path to use system cache (~/.cache/ms-playwright)
+process.env.PLAYWRIGHT_BROWSERS_PATH = process.env.HOME + '/.cache/ms-playwright'
+
 /**
  * Browser Session Server v2.0.0 - Debug-First Persistent Browser
  *

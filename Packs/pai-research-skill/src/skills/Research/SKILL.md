@@ -104,6 +104,22 @@ Route to the appropriate workflow based on the request.
 
 ---
 
+## PDF Handling (Technique #1)
+
+**For large PDFs (>10 pages), use the `pages` parameter:**
+```
+Read({ file_path: "/path/to/large.pdf", pages: "1-5" })
+Read({ file_path: "/path/to/report.pdf", pages: "10-15" })
+```
+
+**Best Practices:**
+- PDFs over 10 pages MUST use the `pages` parameter
+- Maximum 20 pages per request
+- Identify relevant pages first via table of contents or initial scan
+- Use sequential page ranges for related content
+
+---
+
 ## File Organization
 
 **Scratch (temporary work artifacts):** `~/.claude/MEMORY/WORK/{current_work}/scratch/`
@@ -112,3 +128,39 @@ Route to the appropriate workflow based on the request.
 - This ties research artifacts to the work item for learning and context
 
 **History (permanent):** `~/.claude/History/research/YYYY-MM/YYYY-MM-DD_[topic]/`
+
+---
+
+## Durable Tasks (Technique #11)
+
+**For long-running research that may outlive connections:**
+
+The MCP spec now supports durable tasks with polling. For research operations expected to take >60 seconds:
+
+1. **Start task with persistence:**
+   - Save intermediate results to scratch directory
+   - Log progress to MEMORY/WORK/ for session continuity
+
+2. **Enable resumption:**
+   - If connection drops, results persist in scratch/
+   - SessionSummary hook saves resume command
+   - Next session can pick up where research left off
+
+3. **Implementation pattern:**
+   ```typescript
+   // Long research should checkpoint progress
+   const checkpointPath = `${scratchDir}/research-checkpoint.json`;
+
+   // After each agent completes
+   writeFileSync(checkpointPath, JSON.stringify({
+     completed: completedAgents,
+     pending: pendingQueries,
+     results: partialResults,
+     timestamp: new Date().toISOString()
+   }));
+   ```
+
+**When to Use:**
+- ExtensiveResearch workflow (9 agents, 60-90s)
+- Research spanning multiple sessions
+- Large document processing with PDF pages parameter

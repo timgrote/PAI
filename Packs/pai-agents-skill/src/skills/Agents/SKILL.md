@@ -241,6 +241,42 @@ Always specify the appropriate model:
 
 **Rule:** Parallel agents especially benefit from `haiku` for speed.
 
+---
+
+## Task Metrics Tracking (Technique #3)
+
+**Task tool results now include metrics:**
+```json
+{
+  "result": "...",
+  "metrics": {
+    "token_count": 4523,
+    "tool_uses": 12,
+    "duration_ms": 8234
+  }
+}
+```
+
+**Use metrics for:**
+- **Budget enforcement** - Track token usage across agent swarms
+- **Performance optimization** - Identify slow or expensive agents
+- **Cost estimation** - Aggregate metrics for billing/reporting
+
+**Logging pattern:**
+```typescript
+// After Task tool completion, log metrics
+const result = await Task({ prompt: agentPrompt, subagent_type: "Intern" });
+console.error(`[Metrics] Agent completed: ${result.metrics?.token_count} tokens, ${result.metrics?.duration_ms}ms`);
+```
+
+**Aggregate tracking for parallel agents:**
+```typescript
+const results = await Promise.all(agents.map(a => Task(a)));
+const totalTokens = results.reduce((sum, r) => sum + (r.metrics?.token_count || 0), 0);
+const totalDuration = Math.max(...results.map(r => r.metrics?.duration_ms || 0));
+console.error(`[Metrics] Swarm: ${totalTokens} total tokens, ${totalDuration}ms wall time`);
+```
+
 ## Related Skills
 
 - **CORE** - Main system identity and delegation patterns

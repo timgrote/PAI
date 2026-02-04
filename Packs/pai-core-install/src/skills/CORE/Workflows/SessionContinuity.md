@@ -135,6 +135,49 @@ bun run ~/.claude/skills/CORE/Tools/FeatureRegistry.ts list my-feature
 bun run ~/.claude/skills/CORE/Tools/FeatureRegistry.ts next my-feature
 ```
 
+---
+
+## PR Session Links (Technique #8)
+
+**Sessions created via PR are now auto-linked.** Resume any session by PR number:
+
+```bash
+# Resume session that created PR #123
+claude --from-pr 123
+
+# Resume from full PR URL
+claude --from-pr https://github.com/user/repo/pull/123
+```
+
+**How It Works:**
+- When you create a PR using `gh pr create`, Claude Code automatically links the session
+- The session ID is stored with the PR metadata
+- Later, use `--from-pr` to resume with full conversation context
+
+**Benefits:**
+- Pick up exactly where you left off during PR creation
+- Review comments with full implementation context
+- Make requested changes with memory of original intent
+
+---
+
+## Last Resume (from SessionSummary Hook)
+
+The SessionSummary hook saves resume info at session end:
+
+**Location:** `~/.claude/MEMORY/STATE/last-resume.json`
+
+```json
+{
+  "session_id": "abc123",
+  "resume_command": "claude --resume abc123",
+  "work_dir": "feature-xyz",
+  "ended_at": "2026-02-04T08:30:00Z"
+}
+```
+
+**Use Case:** Quickly resume your last session without knowing the session ID.
+
 ## Integration with Development Skill
 
 When using the Development Skill for complex features:

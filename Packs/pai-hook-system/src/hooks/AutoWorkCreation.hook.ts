@@ -20,8 +20,14 @@
  * SIDE EFFECTS:
  * - Creates: MEMORY/WORK/<timestamp>_<slug>/ directory structure
  * - Creates: META.yaml, IDEAL.md, IdealState.jsonl, items/*.yaml
- * - Updates: MEMORY/STATE/current-work.json (session state)
+ * - Updates: MEMORY/STATE/current-work-{session_id}.json (session-keyed state)
+ * - Cleans: Old session state files (keeps 20 most recent, removes >7 days old)
  * - API call: Haiku inference for prompt classification
+ *
+ * CONCURRENCY:
+ * - Session-keyed files support multiple concurrent Claude instances in different folders
+ * - Each session has isolated state files keyed by session_id
+ * - No race conditions between simultaneous sessions
  *
  * INTER-HOOK RELATIONSHIPS:
  * - DEPENDS ON: None (creates foundational work structure)
@@ -97,7 +103,14 @@ interface WorkClassification {
 const BASE_DIR = process.env.PAI_DIR || join(process.env.HOME!, '.claude');
 const WORK_DIR = join(BASE_DIR, 'MEMORY', 'WORK');
 const STATE_DIR = join(BASE_DIR, 'MEMORY', 'STATE');
-const CURRENT_WORK_FILE = join(STATE_DIR, 'current-work.json');
+
+// Session-keyed state files to support multiple concurrent Claude instances
+function getCurrentWorkFile(sessionId: string): string {
+  return join(STATE_DIR, `current-work-${sessionId}.json`);
+}
+
+// Legacy single file path for backwards compatibility during transition
+const LEGACY_CURRENT_WORK_FILE = join(STATE_DIR, 'current-work.json');
 
 const CLASSIFICATION_PROMPT = `Classify this user request. Return ONLY valid JSON:
 {
@@ -137,12 +150,24 @@ async function readStdinWithTimeout(timeout: number = 5000): Promise<string> {
 }
 
 /**
- * Read current work state
+ * Read current work state for a specific session
  */
-function readCurrentWork(): CurrentWork | null {
+function readCurrentWork(sessionId: string): CurrentWork | null {
   try {
-    if (!existsSync(CURRENT_WORK_FILE)) return null;
-    const content = readFileSync(CURRENT_WORK_FILE, 'utf-8');
+    const sessionFile = getCurrentWorkFile(sessionId);
+    if (!existsSync(sessionFile)) {
+      // Check legacy file for backwards compatibility
+      if (existsSync(LEGACY_CURRENT_WORK_FILE)) {
+        const content = readFileSync(LEGACY_CURRENT_WORK_FILE, 'utf-8');
+        const work = JSON.parse(content) as CurrentWork;
+        // Only use legacy if it matches this session
+        if (work.session_id === sessionId) {
+          return work;
+        }
+      }
+      return null;
+    }
+    const content = readFileSync(sessionFile, 'utf-8');
     return JSON.parse(content) as CurrentWork;
   } catch {
     return null;
@@ -150,13 +175,45 @@ function readCurrentWork(): CurrentWork | null {
 }
 
 /**
- * Write current work state
+ * Write current work state for a specific session
  */
-function writeCurrentWork(state: CurrentWork): void {
+function writeCurrentWork(sessionId: string, state: CurrentWork): void {
   if (!existsSync(STATE_DIR)) {
     mkdirSync(STATE_DIR, { recursive: true });
   }
-  writeFileSync(CURRENT_WORK_FILE, JSON.stringify(state, null, 2), 'utf-8');
+  const sessionFile = getCurrentWorkFile(sessionId);
+  writeFileSync(sessionFile, JSON.stringify(state, null, 2), 'utf-8');
+}
+
+/**
+ * Clean up old session state files (keep last 20, remove files older than 7 days)
+ */
+function cleanupOldSessionFiles(): void {
+  try {
+    const { readdirSync, statSync, unlinkSync } = require('fs');
+    const files = readdirSync(STATE_DIR)
+      .filter((f: string) => f.startsWith('current-work-') && f.endsWith('.json'));
+
+    if (files.length <= 20) return;
+
+    // Get file stats and sort by mtime
+    const fileStats = files.map((f: string) => {
+      const path = join(STATE_DIR, f);
+      const stat = statSync(path);
+      return { name: f, path, mtime: stat.mtime.getTime() };
+    }).sort((a: any, b: any) => b.mtime - a.mtime);
+
+    // Keep newest 20, delete rest
+    const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+    for (let i = 20; i < fileStats.length; i++) {
+      if (fileStats[i].mtime < sevenDaysAgo) {
+        unlinkSync(fileStats[i].path);
+        console.error(`[AutoWorkCreation] Cleaned up old state file: ${fileStats[i].name}`);
+      }
+    }
+  } catch (err) {
+    // Silent failure - cleanup is best-effort
+  }
 }
 
 /**
@@ -333,8 +390,11 @@ async function main() {
       mkdirSync(WORK_DIR, { recursive: true });
     }
 
-    // Read current work state
-    let currentWork = readCurrentWork();
+    // Periodic cleanup of old session files
+    cleanupOldSessionFiles();
+
+    // Read current work state for this session (session-keyed to support multiple instances)
+    let currentWork = readCurrentWork(sessionId);
 
     // Check if we need to create a new work directory for this session
     if (!currentWork || currentWork.session_id !== sessionId) {
@@ -350,14 +410,14 @@ async function main() {
       // Create first item
       addItemToWork(workDirName, 1, prompt, classification);
 
-      // Update state
+      // Update state (session-keyed file)
       currentWork = {
         session_id: sessionId,
         work_dir: workDirName,
         created_at: getISOTimestamp(),
         item_count: 1,
       };
-      writeCurrentWork(currentWork);
+      writeCurrentWork(sessionId, currentWork);
 
       console.error(`[AutoWorkCreation] Created new work directory for session ${sessionId}`);
     } else {
@@ -367,8 +427,8 @@ async function main() {
       currentWork.item_count += 1;
       addItemToWork(currentWork.work_dir, currentWork.item_count, prompt, classification);
 
-      // Update state
-      writeCurrentWork(currentWork);
+      // Update state (session-keyed file)
+      writeCurrentWork(sessionId, currentWork);
 
       console.error(`[AutoWorkCreation] Added item ${currentWork.item_count} to existing work`);
     }

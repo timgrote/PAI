@@ -394,6 +394,32 @@ When adding a new utility tool to this system:
 
 ---
 
+## /debug Command (Technique #5)
+
+**Built-in Claude Code diagnostic command for session troubleshooting.**
+
+**Usage:**
+```
+# In any Claude Code session, type:
+/debug
+```
+
+**What It Does:**
+- Provides Claude with internal diagnostic information about the current session
+- Helps troubleshoot hooks, MCP connections, or workflow issues
+- Claude can analyze diagnostics and identify root causes
+
+**When to Use:**
+- MCP tools not working as expected
+- Hook failures or unexpected behavior
+- Permission issues
+- Session state problems
+- "Why isn't X working?"
+
+**Note:** This is a built-in command, not a skill. Just type `/debug` in conversation.
+
+---
+
 ## Deprecated Skills
 
 The following skills have been consolidated into this Tools system:

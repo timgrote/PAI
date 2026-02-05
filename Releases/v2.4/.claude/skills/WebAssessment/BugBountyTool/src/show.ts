@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 // Show recent bug bounty discoveries
 
 import { BugBountyTracker } from './tracker.js';

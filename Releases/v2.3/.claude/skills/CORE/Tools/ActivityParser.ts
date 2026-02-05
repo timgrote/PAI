@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * ActivityParser - Parse session activity for PAI repo update documentation
  *

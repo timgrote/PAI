@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * UpdateIndex - Regenerate index.json and CHANGELOG.md from update files
  *

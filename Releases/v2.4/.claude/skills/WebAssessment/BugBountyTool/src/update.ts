@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 // Update bug bounty programs
 
 import { BugBountyTracker } from './tracker.js';

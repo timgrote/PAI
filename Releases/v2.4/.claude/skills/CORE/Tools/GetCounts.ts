@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 
 /**
  * GetCounts.ts - Single Source of Truth for PAI System Counts

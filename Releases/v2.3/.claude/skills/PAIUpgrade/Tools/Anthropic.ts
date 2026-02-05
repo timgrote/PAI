@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 
 /**
  * Check Anthropic Changes - Comprehensive Update Monitoring

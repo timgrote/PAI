@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 
 /**
  * BannerMatrix - Matrix Digital Rain PAI Banner

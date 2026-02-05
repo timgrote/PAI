@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * update-telos - Update TELOS life context with automatic backups and change tracking
  *

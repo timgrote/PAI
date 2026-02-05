@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * Browse CLI Tool v2.0.0 - Debug-First Browser Automation
  *

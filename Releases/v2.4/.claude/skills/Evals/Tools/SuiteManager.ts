@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * Eval Suite Manager
  * Manage capability vs regression suites with saturation monitoring

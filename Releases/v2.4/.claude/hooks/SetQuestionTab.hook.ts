@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * SetQuestionTab.hook.ts - Tab Color for User Input (PreToolUse)
  *

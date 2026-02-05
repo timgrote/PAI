@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 
 /**
  * EffortClassifier - Classify request effort level for THE ALGORITHM

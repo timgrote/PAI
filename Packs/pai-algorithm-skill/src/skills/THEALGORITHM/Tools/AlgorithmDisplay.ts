@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 
 /**
  * AlgorithmDisplay - LCARS-style visual display for THE ALGORITHM

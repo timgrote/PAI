@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * IntegrityMaintenance.ts - Background script for system integrity and update documentation
  *

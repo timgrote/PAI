@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 
 /**
  * ComposeThumbnail - YouTube Thumbnail Composition CLI

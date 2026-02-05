@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * Trial Runner
  * Execute multiple trials and calculate pass@k / pass^k metrics

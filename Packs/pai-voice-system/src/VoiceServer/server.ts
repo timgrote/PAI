@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * Voice Server - Personal AI Voice notification server using ElevenLabs TTS
  */

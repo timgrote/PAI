@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * Algorithm Bridge
  * Integration between Evals and THE ALGORITHM verification system

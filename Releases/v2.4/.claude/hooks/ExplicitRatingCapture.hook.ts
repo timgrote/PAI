@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * ExplicitRatingCapture.hook.ts - Capture Explicit User Ratings (UserPromptSubmit)
  *

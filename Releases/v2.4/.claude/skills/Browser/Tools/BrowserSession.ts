@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * Browser Session Server v2.0.0 - Debug-First Persistent Browser
  *

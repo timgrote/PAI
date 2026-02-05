@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * FetchReport.ts - Fetch and summarize a specific report
  *

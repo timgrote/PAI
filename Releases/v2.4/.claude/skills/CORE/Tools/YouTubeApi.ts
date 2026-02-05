@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * YouTubeApi.ts - YouTube Data API v3 client
  *

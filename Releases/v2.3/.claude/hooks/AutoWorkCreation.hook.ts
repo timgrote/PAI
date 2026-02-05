@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * AutoWorkCreation.hook.ts - Automatic Work Directory Creation (UserPromptSubmit)
  *

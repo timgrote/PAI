@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * TranscriptParser.ts - Claude transcript parsing utilities
  *

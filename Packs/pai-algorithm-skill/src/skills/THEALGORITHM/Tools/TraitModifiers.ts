@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 
 /**
  * TraitModifiers - Map effort levels to AgentFactory trait modifiers

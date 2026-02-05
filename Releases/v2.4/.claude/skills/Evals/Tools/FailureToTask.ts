@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * Failure to Task Converter
  * Convert real failures into evaluation test cases

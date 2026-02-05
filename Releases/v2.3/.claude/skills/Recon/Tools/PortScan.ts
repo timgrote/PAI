@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * PortScan.ts - Port scanning for hosts and networks
  * Wraps naabu for fast and reliable port enumeration

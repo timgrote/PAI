@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * PathDiscovery.ts - Directory and file path fuzzing
  * Wraps ffuf for discovering hidden paths, directories, and files on web servers

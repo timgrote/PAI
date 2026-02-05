@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * VoiceServerManager.ts - Voice Server Management Tool
  *

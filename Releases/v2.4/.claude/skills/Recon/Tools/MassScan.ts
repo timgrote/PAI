@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * MassScan.ts - Large-scale network port scanning
  * Wraps masscan for scanning large IP ranges at high speed

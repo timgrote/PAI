@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 
 /**
  * BannerRetro - Retro BBS/DOS Terminal Banner for PAI

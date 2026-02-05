@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * FormatEnforcer.hook.ts - Response Format Injection (UserPromptSubmit)
  *

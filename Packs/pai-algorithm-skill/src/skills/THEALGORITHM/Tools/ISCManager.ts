@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 
 /**
  * ISCManager - Manage Ideal State Criteria tables for THE ALGORITHM

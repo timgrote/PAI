@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 
 /**
  * CapabilitySelector - Select appropriate capabilities for ISC rows

@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * EndpointDiscovery.ts - Extract endpoints from JavaScript at scale
  * Parses large volumes of JS to find API endpoints, paths, and secrets

@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * SecurityValidator.hook.ts - Security Validation for Tool Calls (PreToolUse)
  *

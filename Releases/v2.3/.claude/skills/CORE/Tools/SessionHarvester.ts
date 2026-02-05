@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * SessionHarvester - Extract learnings from Claude Code session transcripts
  *

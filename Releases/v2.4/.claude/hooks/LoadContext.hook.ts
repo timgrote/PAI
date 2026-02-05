@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * LoadContext.hook.ts - Inject CORE context into Claude's Context (SessionStart)
  *

@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * ValidateTemplate.ts - Template Syntax Validator
  *

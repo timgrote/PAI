@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * CorporateStructure.ts - Corporate hierarchy and domain mapping for assessments
  * Maps parent companies, subsidiaries, and associated domains for target expansion

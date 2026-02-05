@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * WorkCompletionLearning.hook.ts - Extract Learnings from Completed Work (SessionEnd)
  *

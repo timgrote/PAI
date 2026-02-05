@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * FailureCapture.ts - Full Context Failure Analysis System
  *

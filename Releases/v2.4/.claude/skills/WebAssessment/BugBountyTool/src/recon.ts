@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 // Initiate reconnaissance on a bug bounty program
 
 import { BugBountyTracker } from './tracker.js';

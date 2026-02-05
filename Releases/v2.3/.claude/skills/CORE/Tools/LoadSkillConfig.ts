@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 
 /**
  * LoadSkillConfig - Shared utility for loading skill configurations with user customizations

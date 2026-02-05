@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * Projects-based Event Streaming (In-Memory Only)
  * Watches Claude Code's native projects/ directory for session transcripts

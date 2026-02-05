@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * StartupGreeting.hook.ts - Display PAI Banner at Session Start (SessionStart)
  *

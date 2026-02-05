@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * BountyPrograms.ts - Bug bounty program discovery and monitoring
  * Aggregates data from ProjectDiscovery Chaos, HackerOne, and Bugcrowd

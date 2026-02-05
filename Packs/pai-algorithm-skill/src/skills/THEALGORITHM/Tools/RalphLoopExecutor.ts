@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 
 /**
  * RalphLoopExecutor - Spawn Ralph Loops for ISC rows

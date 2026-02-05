@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 // Set Playwright browsers path to use system cache (~/.cache/ms-playwright)
 process.env.PLAYWRIGHT_BROWSERS_PATH = process.env.HOME + '/.cache/ms-playwright'
 

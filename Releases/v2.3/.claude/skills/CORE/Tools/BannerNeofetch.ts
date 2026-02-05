@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 
 /**
  * BannerNeofetch - Modern Neofetch-Style PAI Banner

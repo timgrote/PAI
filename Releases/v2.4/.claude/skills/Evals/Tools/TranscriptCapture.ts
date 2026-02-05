@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * Transcript Capture System
  * Captures full agent execution trajectories for evaluation

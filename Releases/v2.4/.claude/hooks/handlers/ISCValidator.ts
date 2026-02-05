@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * ISCValidator.ts - ISC File Validation Handler (Stop Event)
  *

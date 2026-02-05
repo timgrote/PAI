@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * SessionSummary.hook.ts - Mark Work Complete and Clear State (SessionEnd)
  *

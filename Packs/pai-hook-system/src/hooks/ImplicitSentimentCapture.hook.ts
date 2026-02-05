@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * ImplicitSentimentCapture.hook.ts - Implicit Sentiment Detection (UserPromptSubmit)
  *

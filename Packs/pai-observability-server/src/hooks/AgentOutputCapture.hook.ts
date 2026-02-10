@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * AgentOutputCapture.hook.ts - Capture Subagent Results (SubagentStop)
  *

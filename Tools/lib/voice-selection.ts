@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/home/tim/.bun/bin/bun
 /**
  * Voice Selection - Gender-aware voice defaults for PAI
  *

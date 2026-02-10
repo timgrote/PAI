@@ -321,6 +321,22 @@ Update state files to avoid duplicate processing:
 - `State/last-check.json` - Updated by Anthropic.ts tool
 - `State/youtube-videos.json` - Add newly processed video IDs
 
+### Step 9: Update PAI Version
+
+Check the upstream repo for the latest version and update settings.json if it changed:
+
+```bash
+# Get latest version from upstream repo's newest release directory
+LATEST_VERSION=$(ls -d /mnt/d/repos/PAI/Releases/v*/ 2>/dev/null | sort -V | tail -1 | grep -oP 'v\K[0-9.]+')
+CURRENT_VERSION=$(jq -r '.env.PAI_VERSION // ""' ~/.claude/settings.json)
+
+if [ -n "$LATEST_VERSION" ] && [ "$LATEST_VERSION" != "$CURRENT_VERSION" ]; then
+  # Update env.PAI_VERSION in settings.json
+  jq --arg v "$LATEST_VERSION" '.env.PAI_VERSION = $v' ~/.claude/settings.json > /tmp/settings_tmp.json && mv /tmp/settings_tmp.json ~/.claude/settings.json
+  echo "PAI version updated: $CURRENT_VERSION → $LATEST_VERSION"
+fi
+```
+
 ---
 
 ## Quick Mode

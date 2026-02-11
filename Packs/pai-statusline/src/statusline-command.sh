@@ -126,7 +126,7 @@ dir_name=$(basename "$current_dir")
 # ─────────────────────────────────────────────────────────────────────────────
 
 skills_count=$(ls -d "$PAI_DIR/skills"/*/ 2>/dev/null | wc -l | tr -d ' ')
-workflows_count=$(ls "$PAI_DIR/skills"/*/workflows/*.md 2>/dev/null | wc -l | tr -d ' ')
+workflows_count=$(ls "$PAI_DIR/skills"/*/Workflows/*.md 2>/dev/null | wc -l | tr -d ' ')
 hooks_count=$(ls "$PAI_DIR/hooks"/*.ts 2>/dev/null | wc -l | tr -d ' ')
 learnings_count=$(find "$PAI_DIR/MEMORY/LEARNING" -type f -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
 work_count=$(find "$PAI_DIR/MEMORY/WORK" -mindepth 2 -maxdepth 2 -type d 2>/dev/null | wc -l | tr -d ' ')

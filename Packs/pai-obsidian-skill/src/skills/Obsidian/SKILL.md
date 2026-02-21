@@ -17,6 +17,14 @@ Direct Obsidian vault manipulation through the official Obsidian CLI (v1.12+). T
 
 ---
 
+## Execution Rules
+
+- **One CLI call per operation.** The CLI is fast — don't add extra calls to "verify" or "check" unless the user asks.
+- **Use the `obsidian` alias**, not the full Windows path. The alias is set up in `~/.bashrc`.
+- **Don't read back notes after opening them** unless the user asks what's in them.
+
+---
+
 ## Prerequisites
 
 - **Obsidian 1.12+** with CLI enabled in Settings

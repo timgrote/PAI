@@ -1,0 +1,565 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "DA": "PAI",
+    "PAI_DIR": "/home/tim/.claude",
+    "PAI_VERSION": "2.5",
+    "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "64000",
+    "PAI_CONFIG_DIR": "/home/tim/.config/PAI"
+  },
+  "permissions": {
+    "allow": [
+      "Bash",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "MultiEdit(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "LS(*)",
+      "WebFetch(domain:*)",
+      "WebSearch",
+      "NotebookRead(*)",
+      "NotebookEdit(*)",
+      "TodoWrite(*)",
+      "ExitPlanMode(*)",
+      "Task(*)",
+      "mcp__*",
+      "Bash(git push:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" src/raindrop/Raindrop.csproj -p:Configuration=AutoCAD_Debug -v:minimal)",
+      "Bash(tree:*)",
+      "Bash(dotnet build)",
+      "Bash(dotnet build:*)",
+      "Bash(dotnet run:*)",
+      "Bash(cat:*)",
+      "Bash(cp:*)",
+      "Bash(sed:*)",
+      "Bash(csc:*)",
+      "Bash(powershell:*)",
+      "Bash(pandoc:*)",
+      "Bash(find:*)",
+      "Bash(gh issue view:*)",
+      "Bash(git checkout:*)",
+      "Bash(git pull:*)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" src/raindrop/Raindrop.csproj -t:Restore -p:Configuration=AutoCAD_Debug -v:minimal)",
+      "Read(//d/Dropbox/TIE/RVi Planning/Ave South/drawings/**)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" src/raindrop/Raindrop.csproj -t:Restore -p:Configuration=AutoCAD_Debug -v:q)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" src/raindrop/Raindrop.csproj -p:Configuration=AutoCAD_Debug -v:q)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" src/raindrop/Raindrop.csproj -t:Restore,Build -p:Configuration=AutoCAD_Debug -v:q)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" src/raindrop/Raindrop.csproj -t:Build -p:Configuration=AutoCAD_Debug -v:q)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" src/raindrop/Raindrop.csproj -t:Restore,Build -p:Configuration=AutoCAD_Debug -v:minimal)",
+      "Bash(findstr:*)",
+      "Bash(dir:*)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/18/Insiders/MSBuild/Current/Bin/MSBuild.exe\" src/raindrop/Raindrop.csproj -t:Build -p:Configuration=AutoCAD_Debug -v:minimal)",
+      "Bash(Select-String -Pattern \"Build succeeded|Build FAILED|error\")",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/18/Insiders/MSBuild/Current/Bin/MSBuild.exe\" src/raindrop/Raindrop.csproj -t:Build -p:Configuration=AutoCAD_Debug -v:q)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/18/Insiders/MSBuild/Current/Bin/MSBuild.exe\" src/raindrop/Raindrop.csproj -t:Restore -p:Configuration=AutoCAD_Debug -v:q)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/18/Insiders/MSBuild/Current/Bin/MSBuild.exe\" src/raindrop/Raindrop.csproj -t:Restore,Build -p:Configuration=AutoCAD_Debug -v:q)",
+      "Bash(test:*)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" src/raindrop/Raindrop.csproj -t:Build -p:Configuration=AutoCAD_Debug -v:minimal)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/18/Insiders/MSBuild/Current/Bin/amd64/MSBuild.exe\" src/raindrop/Raindrop.csproj -t:Restore,Build -p:Configuration=AutoCAD_Debug -v:q)",
+      "Bash(ls:*)",
+      "Bash(start UIPrototype.exe)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" src/raindrop/Raindrop.csproj -t:MarkupCompilePass1 -p:Configuration=AutoCAD_Debug -v:minimal)",
+      "Bash(xmllint:*)",
+      "Bash(gh pr create:*)",
+      "Read(//mnt/d/Dropbox/TIE/RVi Planning/Ave South/drawings/**)",
+      "Bash(\"/mnt/c/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" src/raindrop/Raindrop.csproj -t:Restore,Build -p:Configuration=AutoCAD_Debug -v:q)",
+      "Bash(\"/mnt/c/Program Files/Microsoft Visual Studio/18/Insiders/MSBuild/Current/Bin/amd64/MSBuild.exe\" src/raindrop/Raindrop.csproj -t:Restore,Build -p:Configuration=AutoCAD_Debug -v:q)",
+      "Bash(chmod:*)",
+      "Bash(/mnt/d/repos/Raindrop/.claude/actions/run-epanet.sh:*)",
+      "Bash(dos2unix:*)",
+      "Read(//mnt/c/**)",
+      "Bash(/mnt/d/repos/Raindrop/src/raindrop/EPANet/runepanet.exe:*)",
+      "Bash(/mnt/d/repos/Raindrop/src/raindrop/EPANet/runepanet.exe)",
+      "Bash(\"/mnt/d/repos/Raindrop/src/TestUtilities/ExcelReportTester/bin/Release/net8.0-windows/ExcelReportTester.exe\" \"C:\\Users\\tim\\Desktop\\AveSouth.json\")",
+      "Bash(\"/mnt/d/repos/Raindrop/src/TestUtilities/ExcelReportTester/bin/Release/net8.0-windows/ExcelReportTester.exe\" \"D:\\Dropbox\\TIE\\RVi Planning\\Ave South\\drawings\\Mainline Hydraulic Analysis.tsv\")",
+      "Bash(gh pr list:*)",
+      "Bash(git rm:*)",
+      "Bash(git log --branches --not --remotes --oneline)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/18/Insiders/MSBuild/Current/Bin/amd64/MSBuild.exe\" src/raindrop/Raindrop.csproj -t:Restore,Build -p:Configuration=AutoCAD_Debug -v:minimal)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/18/Insiders/MSBuild/Current/Bin/amd64/MSBuild.exe\" src/raindrop/Raindrop.csproj -t:Build -p:Configuration=AutoCAD_Debug -v:q)",
+      "Read(//c/Users/tim/Desktop/**)",
+      "Bash(start \"\" \"D:\\repos\\Raindrop\\src\\TestUtilities\\UIPrototype\\bin\\Debug\\net8.0-windows\\UIPrototype.exe\")",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" src/raindrop/Raindrop.csproj -t:Clean -p:Configuration=AutoCAD_Debug -v:q)",
+      "Bash(Select-String -Pattern \"error|warning|Build succeeded|Build FAILED\" -Context 2,0)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/18/Insiders/MSBuild/Current/Bin/amd64/MSBuild.exe\" src/raindrop/Raindrop.csproj -t:Build -p:Configuration=AutoCAD_Debug -v:minimal)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/18/Insiders/MSBuild/Current/Bin/amd64/MSBuild.exe\" src/raindrop/Raindrop.csproj -t:Clean,Restore,Build -p:Configuration=AutoCAD_Debug -v:q)",
+      "Bash(Select-String -Pattern \"Build succeeded|Build FAILED\")",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:www.hunterirrigation.com)",
+      "WebFetch(domain:www.rainbird.com)",
+      "Read(//d/**)",
+      "Bash(cd:*)",
+      "Bash(git tag:*)",
+      "Bash(git log:*)",
+      "Bash(claude:*)",
+      "Bash(git --version:*)",
+      "Bash(dotnet:*)",
+      "Bash(git fetch:*)",
+      "Bash(gh pr checks:*)",
+      "Bash(gh run view:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh issue list:*)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" d:/repos/Raindrop/src/raindrop/Raindrop.csproj -t:Build -p:Configuration=AutoCAD_Debug -v:q)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" d:/repos/Raindrop/src/raindrop/Raindrop.csproj -t:Restore,Build -p:Configuration=AutoCAD_Debug -v:q)",
+      "Bash(git merge:*)",
+      "Bash(mkdir:*)",
+      "Bash(python:*)",
+      "Bash(./venv/Scripts/pip install:*)",
+      "Bash(./venv/Scripts/python:*)",
+      "WebFetch(domain:berthoud-co.elaws.us)",
+      "WebFetch(domain:library.municode.com)",
+      "WebFetch(domain:berthoud.org)",
+      "WebFetch(domain:www.berthoud.org)",
+      "WebFetch(domain:berthoudsurveyor.com)",
+      "WebFetch(domain:frederickco.gov)",
+      "WebFetch(domain:web.archive.org)",
+      "WebFetch(domain:ires-net.com)",
+      "WebFetch(domain:iresmls.com)",
+      "Skill(CreateSkill)",
+      "WebFetch(domain:help.autodesk.com)",
+      "WebFetch(domain:forums.autodesk.com)",
+      "WebFetch(domain:docs.autodesk.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Skill(Worktree)",
+      "WebFetch(domain:cdn.discordapp.com)",
+      "WebFetch(domain:keanw.com)",
+      "WebFetch(domain:spiderinnet1.typepad.com)",
+      "Bash(gh auth:*)",
+      "Bash(gh repo view:*)",
+      "Bash(gh api:*)",
+      "Bash(gh search commits:*)",
+      "Bash(claude config --help)",
+      "Bash(claude config list)",
+      "Read(/home/tim/**)",
+      "Read(/home/tim/.claude/**)",
+      "Read(/home/tim/.claude/projects/**)",
+      "Read(/home/tim/.claude/projects/-mnt-d-Dropbox-Personal/**)",
+      "WebFetch(domain:medium.com)",
+      "Bash(gh repo list:*)",
+      "WebFetch(domain:silentvoid13.github.io)",
+      "WebFetch(domain:docs.obsidian.md)",
+      "WebFetch(domain:forum.obsidian.md)",
+      "Bash(./update_docs.sh)",
+      "Read(//mnt/d/Dropbox/TIE/**)",
+      "WebFetch(domain:support.anthropic.com)",
+      "WebFetch(domain:global.aorus.com)",
+      "Bash(claude config get sessionStartHook)",
+      "Bash(/mnt/d/Dropbox/Personal/.claude/startup-protocol.sh)",
+      "Bash(claude config get sessionEndHook)",
+      "Read(//home/tim/.claude/**)",
+      "Bash(node:*)",
+      "Bash(npm --version)",
+      "Read(//home/tim/**)",
+      "Bash(npm audit:*)",
+      "Bash(npm install)",
+      "Bash(npm run build:*)",
+      "Bash(claude mcp add:*)",
+      "Bash(claude mcp:*)",
+      "Bash(curl -H \"Authorization: Bearer 63c4989a9496fa27c11e508a6c091489003daf9258e9f7e1d1bad328254b9cb9\" http://127.0.0.1:27123/)",
+      "Bash(curl -k https://127.0.0.1:27124/ -H \"Authorization: Bearer 63c4989a9496fa27c11e508a6c091489003daf9258e9f7e1d1bad328254b9cb9\")",
+      "Bash(wget:*)",
+      "Bash(curl http://127.0.0.1:27123/ -H \"Authorization: Bearer 63c4989a9496fa27c11e508a6c091489003daf9258e9f7e1d1bad328254b9cb9\")",
+      "Read(//mnt/wsl/**)",
+      "Bash(awk:*)",
+      "Bash(curl -k https://10.255.255.254:27124/ -H \"Authorization: Bearer 63c4989a9496fa27c11e508a6c091489003daf9258e9f7e1d1bad328254b9cb9\" --max-time 5)",
+      "Bash(curl http://10.255.255.254:27123/ -H \"Authorization: Bearer 63c4989a9496fa27c11e508a6c091489003daf9258e9f7e1d1bad328254b9cb9\" --max-time 5)",
+      "Read(//usr/bin/**)",
+      "Bash(echo \"Please run this in Windows PowerShell and paste the output:\nnetstat -ano | findstr :27123\nnetstat -ano | findstr :27124\")",
+      "Bash(ip route:*)",
+      "Bash(curl -k https://172.20.80.1:27124/ -H \"Authorization: Bearer 63c4989a9496fa27c11e508a6c091489003daf9258e9f7e1d1bad328254b9cb9\" --max-time 5)",
+      "Bash(curl -k https://172.20.80.1:27124/search/simple/?query=investing -H \"Authorization: Bearer 63c4989a9496fa27c11e508a6c091489003daf9258e9f7e1d1bad328254b9cb9\")",
+      "Bash(curl -k https://172.20.80.1:27124/vault/ -H \"Authorization: Bearer 63c4989a9496fa27c11e508a6c091489003daf9258e9f7e1d1bad328254b9cb9\")",
+      "Bash(curl -k -X POST https://172.20.80.1:27124/open/Investing.md -H \"Authorization: Bearer 63c4989a9496fa27c11e508a6c091489003daf9258e9f7e1d1bad328254b9cb9\")",
+      "Bash(curl -k https://172.20.80.1:27124/vault/Compass%20Project.md -H \"Authorization: Bearer 63c4989a9496fa27c11e508a6c091489003daf9258e9f7e1d1bad328254b9cb9\")",
+      "Bash(curl -k -X POST https://172.20.80.1:27124/open/Obsidian%20API%20%26%20MCP%20Setup.md -H \"Authorization: Bearer 63c4989a9496fa27c11e508a6c091489003daf9258e9f7e1d1bad328254b9cb9\")",
+      "Bash(claude config get allowedTools)",
+      "Bash(curl -k https://172.20.80.1:27124/ -H \"Authorization: Bearer 63c4989a9496fa27c11e508a6c091489003daf9258e9f7e1d1bad328254b9cb9\")",
+      "mcp__obsidian-vault__*",
+      "Read(/mnt/d/Dropbox/Personal/**)",
+      "Bash(curl -k -X POST https://172.20.80.1:27124/open/n8n.md -H \"Authorization: Bearer 63c4989a9496fa27c11e508a6c091489003daf9258e9f7e1d1bad328254b9cb9\")",
+      "mcp__obsidian-vault__obsidian_read_note",
+      "Bash(curl -k https://172.20.80.1:27124/vault/Journal/2025-10-04.md -H \"Authorization: Bearer 63c4989a9496fa27c11e508a6c091489003daf9258e9f7e1d1bad328254b9cb9\")",
+      "mcp__obsidian-vault__obsidian_global_search",
+      "mcp__obsidian-vault__obsidian_list_notes",
+      "mcp__obsidian-vault__obsidian_update_note",
+      "mcp__obsidian-vault__obsidian_open_note",
+      "mcp__obsidian-vault__obsidian_manage_frontmatter",
+      "Read(//mnt/d/repos/**)",
+      "WebFetch(domain:docs.activitywatch.net)",
+      "WebFetch(domain:dev.loom.com)",
+      "Bash(curl -k https://127.0.0.1:27126/ -H \"Authorization: Bearer 4bf1a7222214368818c942c713f8bd01737d6eacf41b9131062c0a771b0464d2\" --max-time 5)",
+      "Bash(curl -k https://172.20.80.1:27126/ -H \"Authorization: Bearer 4bf1a7222214368818c942c713f8bd01737d6eacf41b9131062c0a771b0464d2\" --max-time 5)",
+      "Bash(curl -k https://127.0.0.1:27126/ -H \"Authorization: Bearer 4bf1a7222214368818c942c713f8bd01737d6eacf41b9131062c0a771b0464d2\" --max-time 5 -v)",
+      "Bash(curl -k https://172.20.80.1:27126/ -H \"Authorization: Bearer 4bf1a7222214368818c942c713f8bd01737d6eacf41b9131062c0a771b0464d2\" --max-time 5 -v)",
+      "Bash(curl -k https://172.20.80.1:27126/ -H \"Authorization: Bearer 4bf1a7222214368818c942c713f8bd01737d6eacf41b9131062c0a771b0464d2\" --max-time 10)",
+      "Bash(pkill:*)",
+      "Bash(curl -k https://172.20.80.1:27126/ -H \"Authorization: Bearer 4bf1a7222214368818c942c713f8bd01737d6eacf41b9131062c0a771b0464d2\" --max-time 10 -v)",
+      "Bash(done)",
+      "Bash(bash:*)",
+      "Read(//c/Users/tim/**)",
+      "WebFetch(domain:docs.docker.com)",
+      "WebFetch(domain:docs.n8n.io)",
+      "WebFetch(domain:hub.docker.com)",
+      "Bash(xargs ls:*)",
+      "WebFetch(domain:forum.rainmeter.net)",
+      "Bash(date:*)",
+      "Bash(curl -k --connect-timeout 2 https://172.20.80.1:27124/ -H \"Authorization: Bearer 63c4989a9496fa27c11e508a6c091489003daf9258e9f7e1d1bad328254b9cb9\")",
+      "Bash(curl -k -v https://172.20.80.1:27124/ -H \"Authorization: Bearer 63c4989a9496fa27c11e508a6c091489003daf9258e9f7e1d1bad328254b9cb9\" --connect-timeout 5)",
+      "Bash(curl:*)",
+      "Read(//mnt/c/Users/tim/**)",
+      "Bash(openssl s_client:*)",
+      "WebFetch(domain:credentials.tinycloud.xyz)",
+      "WebFetch(domain:memo.tinycloud.xyz)",
+      "WebFetch(domain:tinycloud.xyz)",
+      "WebFetch(domain:sovereign-core.net)",
+      "WebFetch(domain:vitalik.eth.limo)",
+      "WebFetch(domain:aquafier.inblock.io)",
+      "WebFetch(domain:www.reddit.com)",
+      "WebFetch(domain:docs.yjs.dev)",
+      "Bash(docker-compose:*)",
+      "Bash(for dir in tldraw yjs-canvas pixijs-dxf konva)",
+      "Bash(do cp -r /mnt/d/Dropbox/Personal/Groundwork/experiments/$dir experiments/)",
+      "Bash(echo:*)",
+      "Bash(nc:*)",
+      "WebFetch(domain:immich.app)",
+      "Read(//mnt/d/**)",
+      "Bash(git -C /mnt/d/repos/Raindrop log --since=\"2025-10-11 00:00\" --until=\"2025-10-11 23:59\" --pretty=format:\"- %s (%h)\" --all)",
+      "Bash(git -C /mnt/d/repos/Raindrop log --since=\"2025-10-10 00:00\" --pretty=format:\"%ad - %s (%h)\" --date=format:\"%Y-%m-%d %I:%M %p\" -20)",
+      "WebFetch(domain:apidog.com)",
+      "WebFetch(domain:www.openproject.org)",
+      "Bash(docker run:*)",
+      "Bash(openproject/openproject:16)",
+      "Bash(docker compose:*)",
+      "Bash(docker cp:*)",
+      "Bash(rsync:*)",
+      "Skill(Art)",
+      "WebFetch(domain:itnext.io)",
+      "mcp__n8n-calendar__get_upcoming_events",
+      "mcp__n8n-email__get_recent_emails",
+      "WebFetch(domain:confer.to)",
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:www.keybpmfinder.com)",
+      "Skill(Browser)",
+      "Bash(claude config:*)",
+      "Bash(pgrep:*)",
+      "Bash(ffplay:*)",
+      "Bash(pactl info:*)",
+      "Bash(wpctl status:*)",
+      "Bash(aplay:*)",
+      "Bash(espeak:*)",
+      "Bash(gnome-extensions list:*)",
+      "Bash(gsettings get:*)",
+      "Bash(kitty:*)",
+      "Bash(dconf dump:*)",
+      "Bash(dconf write:*)",
+      "Bash(dconf list:*)",
+      "Bash(sudo apt install:*)",
+      "Bash(gnome-extensions install:*)",
+      "Bash(gnome-shell --version:*)",
+      "Bash(apt search:*)",
+      "Bash(apt list:*)",
+      "Bash(whisper:*)",
+      "Bash(pip show:*)",
+      "Bash(pipx list:*)",
+      "Bash(conda list:*)",
+      "Bash(locate:*)",
+      "Bash(/usr/bin/whispering:*)",
+      "Bash(dpkg:*)",
+      "Bash(rpm:*)",
+      "Bash(apt-cache policy:*)",
+      "Bash(docker:*)",
+      "mcp__plugin_playwright_playwright__browser_navigate",
+      "mcp__plugin_playwright_playwright__browser_take_screenshot",
+      "mcp__plugin_playwright_playwright__browser_type",
+      "mcp__plugin_playwright_playwright__browser_click",
+      "mcp__plugin_playwright_playwright__browser_wait_for",
+      "mcp__plugin_playwright_playwright__browser_file_upload",
+      "mcp__plugin_playwright_playwright__browser_console_messages",
+      "mcp__plugin_playwright_playwright__browser_snapshot",
+      "mcp__plugin_playwright_playwright__browser_evaluate",
+      "mcp__plugin_playwright_playwright__browser_press_key",
+      "mcp__plugin_playwright_playwright__browser_close",
+      "Bash(git init:*)",
+      "Bash(gh repo create:*)",
+      "WebFetch(domain:www.anthropic.com)",
+      "WebFetch(domain:docs.claude.com)",
+      "WebFetch(domain:americanhistory.si.edu)",
+      "WebFetch(domain:digital.sciencehistory.org)",
+      "WebFetch(domain:collection.sciencemuseumgroup.org.uk)",
+      "WebFetch(domain:www.chemistryworld.com)",
+      "WebFetch(domain:erc.bioscientifica.com)",
+      "WebFetch(domain:onih.pastperfectonline.com)",
+      "WebFetch(domain:www.researchgate.net)",
+      "WebFetch(domain:www.nal.usda.gov)",
+      "WebFetch(domain:chestofbooks.com)",
+      "WebFetch(domain:www.oncopedia.wiki)",
+      "WebFetch(domain:en.wikipedia.org)",
+      "WebFetch(domain:link.springer.com)",
+      "WebFetch(domain:commons.wikimedia.org)",
+      "WebFetch(domain:news.ycombinator.com)",
+      "WebFetch(domain:www.goodreads.com)",
+      "WebFetch(domain:en.wikiquote.org)",
+      "WebFetch(domain:clau.de)",
+      "WebFetch(domain:synapsefeed.com)",
+      "WebFetch(domain:leonisnewsletter.substack.com)",
+      "WebFetch(domain:developer.todoist.com)",
+      "WebFetch(domain:docs.tinycloud.xyz)"
+    ],
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(rm -rf /*)",
+      "Bash(rm -rf ~)",
+      "Bash(rm -rf $HOME)",
+      "Bash(rm -rf $PAI_HOME)",
+      "Bash(rm -rf $PAI_DIR)",
+      "Bash(sudo rm -rf /)",
+      "Bash(sudo rm -rf /*)",
+      "Bash(fork bomb)",
+      "Bash(dd if=/dev/zero of=/dev/sda)",
+      "Bash(mkfs.ext4 /dev/sda)",
+      "Bash( /dev/sda)",
+      "Bash(> /dev/sda)"
+    ],
+    "ask": [
+      "Bash(rm -rf *)",
+      "Bash(rm -r *)",
+      "Bash(sudo rm *)",
+      "Bash(git push --force*)",
+      "Bash(git push -f *)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean -f*)",
+      "Bash(chmod 777 *)",
+      "Bash(sudo *)",
+      "Bash(curl * | bash)",
+      "Bash(curl * | sh)",
+      "Bash(wget * | bash)",
+      "Bash(> /dev/*)",
+      "Bash(dd if=*)"
+    ],
+    "defaultMode": "default"
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "playwright"
+  ],
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${PAI_DIR}/hooks/SecurityValidator.hook.ts"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${PAI_DIR}/hooks/SecurityValidator.hook.ts"
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${PAI_DIR}/hooks/SecurityValidator.hook.ts"
+          }
+        ]
+      },
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${PAI_DIR}/hooks/SecurityValidator.hook.ts"
+          }
+        ]
+      },
+      {
+        "matcher": "AskUserQuestion",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${PAI_DIR}/hooks/SetQuestionTab.hook.ts"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "AskUserQuestion",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${PAI_DIR}/hooks/QuestionAnswered.hook.ts"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${PAI_DIR}/hooks/WorkCompletionLearning.hook.ts"
+          },
+          {
+            "type": "command",
+            "command": "${PAI_DIR}/hooks/SessionSummary.hook.ts"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${PAI_DIR}/hooks/FormatReminder.hook.ts"
+          },
+          {
+            "type": "command",
+            "command": "${PAI_DIR}/hooks/AutoWorkCreation.hook.ts"
+          },
+          {
+            "type": "command",
+            "command": "${PAI_DIR}/hooks/ExplicitRatingCapture.hook.ts"
+          },
+          {
+            "type": "command",
+            "command": "${PAI_DIR}/hooks/ImplicitSentimentCapture.hook.ts"
+          },
+          {
+            "type": "command",
+            "command": "${PAI_DIR}/hooks/UpdateTabTitle.hook.ts"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${PAI_DIR}/hooks/StartupGreeting.hook.ts"
+          },
+          {
+            "type": "command",
+            "command": "${PAI_DIR}/hooks/LoadContext.hook.ts"
+          },
+          {
+            "type": "command",
+            "command": "${PAI_DIR}/hooks/CheckVersion.hook.ts"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${PAI_DIR}/hooks/StopOrchestrator.hook.ts"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${PAI_DIR}/hooks/AgentOutputCapture.hook.ts"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "/home/tim/.claude/statusline-command.sh"
+  },
+  "enabledPlugins": {
+    "github@claude-plugins-official": false,
+    "feature-dev@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "security-guidance@claude-plugins-official": true,
+    "playwright@claude-plugins-official": false,
+    "pr-review-toolkit@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "explanatory-output-style@claude-plugins-official": true,
+    "linear@claude-plugins-official": true,
+    "greptile@claude-plugins-official": true,
+    "learning-output-style@claude-plugins-official": true,
+    "csharp-lsp@claude-plugins-official": true,
+    "ralph-loop@claude-plugins-official": true,
+    "stripe@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true,
+    "huggingface-skills@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "serena@claude-plugins-official": true,
+    "claude-code-setup@claude-plugins-official": true,
+    "context7@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "hookify@claude-plugins-official": true
+  },
+  "counts": {
+    "skills": 49,
+    "workflows": 179,
+    "hooks": 50,
+    "signals": 120,
+    "files": 48,
+    "updatedAt": "2026-02-16T01:15:41.334Z"
+  },
+  "effortLevel": "medium",
+  "principal": {
+    "name": "Tim",
+    "timezone": "America/Denver"
+  },
+  "daidentity": {
+    "name": "Pi",
+    "fullName": "Pi — Personal AI",
+    "displayName": "PI",
+    "color": "#3B82F6",
+    "voices": {
+      "main": {
+        "voiceId": "21m00Tcm4TlvDq8ikWAM",
+        "stability": 0.35,
+        "similarityBoost": 0.8,
+        "style": 0.9,
+        "speed": 1.1
+      },
+      "algorithm": {
+        "voiceId": "21m00Tcm4TlvDq8ikWAM",
+        "stability": 0.35,
+        "similarityBoost": 0.8,
+        "style": 0.9,
+        "speed": 1.1
+      }
+    },
+    "startupCatchphrase": "Pi here, ready to go",
+    "voiceId": "21m00Tcm4TlvDq8ikWAM"
+  },
+  "pai": {
+    "repoUrl": "https://github.com/danielmiessler/PAI",
+    "version": "3.0"
+  },
+  "contextFiles": [
+    "skills/PAI/SKILL.md",
+    "skills/PAI/AISTEERINGRULES.md",
+    "skills/PAI/USER/AISTEERINGRULES.md",
+    "skills/PAI/USER/DAIDENTITY.md"
+  ]
+}
